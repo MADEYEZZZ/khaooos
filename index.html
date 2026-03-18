@@ -2179,138 +2179,154 @@ function resetHowl() {
   }
   tick();
 })();
-</script>
-  <style>
-  /* Il teschio deve essere sempre cliccabile */
-  #admin-opener { 
-    position: fixed; 
-    bottom: 20px; 
-    right: 20px; 
-    z-index: 10001; 
-    font-size: 24px; 
-    color: #7A0000; 
-    cursor: pointer; 
-    opacity: 0.4; 
-    transition: 0.3s; 
-    user-select: none;
-    pointer-events: auto !important;
-  }
-  #admin-opener:hover { opacity: 1; transform: scale(1.2); color: #E02020; }
-
-  /* L'overlay di login blocca i clic solo quando è display: flex */
-  #admin-login-overlay { 
-    display: none; 
-    position: fixed; 
-    inset: 0; 
-    background: rgba(0,0,0,0.95); 
-    z-index: 10002; 
-    align-items: center; 
-    justify-content: center; 
-    backdrop-filter: blur(10px); 
-  }
-
-  /* Il pannello di editing */
-  #edit-panel { 
-    display: none; 
-    position: fixed; 
-    left: 20px; 
-    top: 20px; 
-    width: 320px; 
-    background: rgba(6,0,2,0.98); 
-    border: 1px solid #A80000; 
-    z-index: 10000; 
-    padding: 20px; 
-    max-height: 90vh; 
-    overflow-y: auto; 
-    box-shadow: 10px 10px 30px rgba(0,0,0,0.8); 
-    border-left: 5px solid #7A0000;
-  }
-
-  .login-box { background: #100005; border: 1px solid #7A0000; padding: 40px; text-align: center; width: 300px; }
-  .login-box input { width: 100%; background: #000; border: 1px solid rgba(160,40,40,0.3); color: #E02020; padding: 12px; margin: 20px 0; font-family: 'Share Tech Mono'; text-align: center; outline: none; }
-  .login-box button { background: #7A0000; border: none; color: #fff; padding: 10px 20px; cursor: pointer; font-family: 'Share Tech Mono'; width: 100%; }
+<style id="admin-styles">
+  #admin-opener { position: fixed; bottom: 15px; right: 15px; z-index: 10001; font-size: 28px; color: #7A0000; cursor: pointer; opacity: 0.3; transition: 0.3s; user-select: none; pointer-events: auto !important; }
+  #admin-opener:hover { opacity: 1; transform: scale(1.2) rotate(10deg); color: #FF0000; }
   
-  .edit-header { font-family: 'Cinzel'; color: #E02020; font-size: 11px; margin-bottom: 20px; border-bottom: 1px solid rgba(160,40,40,0.3); padding-bottom: 10px; display: flex; justify-content: space-between; }
-  .edit-label { font-size: 9px; color: #7A0000; letter-spacing: 2px; display: block; margin-bottom: 5px; text-transform: uppercase; font-family: 'Share Tech Mono'; }
-  .edit-input { width: 100%; background: #111; border: 1px solid #330000; color: #C89090; padding: 8px; font-size: 11px; font-family: 'Share Tech Mono'; margin-bottom: 10px; }
-  .save-trigger { background: #E02020; color: #000; border: none; padding: 12px; width: 100%; font-weight: bold; cursor: pointer; font-family: 'Share Tech Mono'; letter-spacing: 1px; margin-top: 10px; }
+  #admin-login-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 10002; align-items: center; justify-content: center; backdrop-filter: blur(15px); }
+  .login-box { background: #000; border: 1px solid #7A0000; padding: 40px; text-align: center; width: 320px; box-shadow: 0 0 50px rgba(122,0,0,0.3); }
   
-  /* Stile per quando sei in modalità modifica */
-  .editing-active [contenteditable="true"] {
-    outline: 1px dashed rgba(224, 32, 32, 0.5) !important;
+  #hyper-panel { 
+    display: none; position: fixed; left: 0; top: 0; width: 350px; height: 100vh; 
+    background: #050001; border-right: 1px solid #7A0000; z-index: 10000; padding: 25px; 
+    overflow-y: auto; font-family: 'Share Tech Mono', monospace; box-shadow: 20px 0 50px rgba(0,0,0,0.9);
   }
+  
+  .hp-section { margin-bottom: 25px; border-bottom: 1px solid rgba(122,0,0,0.2); padding-bottom: 15px; }
+  .hp-title { color: #E02020; font-size: 12px; letter-spacing: 3px; margin-bottom: 15px; text-transform: uppercase; font-weight: bold; }
+  .hp-label { display: block; font-size: 9px; color: #7A4040; margin-bottom: 5px; text-transform: uppercase; }
+  .hp-input { width: 100%; background: #111; border: 1px solid #330000; color: #F5D0D0; padding: 8px; font-size: 11px; margin-bottom: 10px; outline: none; }
+  .hp-input:focus { border-color: #E02020; }
+  .hp-color-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  
+  .hp-btn-save { background: #7A0000; color: #fff; border: none; padding: 15px; width: 100%; cursor: pointer; font-weight: bold; letter-spacing: 2px; margin-top: 10px; transition: 0.3s; }
+  .hp-btn-save:hover { background: #E02020; color: #000; box-shadow: 0 0 20px #E02020; }
+  
+  /* Feedback visivo durante l'editing */
+  .editing-mode [contenteditable="true"] { outline: 1px dashed rgba(224, 32, 32, 0.4) !important; background: rgba(122,0,0,0.05); }
+  .editing-mode [contenteditable="true"]:hover { outline: 1px solid #E02020 !important; }
 </style>
 
-<div id="admin-opener" onclick="showLogin()">☠</div>
+<div id="admin-opener" onclick="toggleLogin()">☠</div>
 
 <div id="admin-login-overlay">
   <div class="login-box">
-    <div style="font-size:10px; color:#7A0000; letter-spacing:4px; font-family:'Share Tech Mono';">AUTENTICAZIONE</div>
-    <input type="password" id="pass-field" placeholder="PASSWORD">
-    <button onclick="checkPass()">LOGIN</button>
-    <div onclick="document.getElementById('admin-login-overlay').style.display='none'" style="margin-top:15px; font-size:9px; color:#7A4040; cursor:pointer; font-family:'Share Tech Mono';">ANNULLA</div>
+    <div style="font-size:11px; color:#7A0000; letter-spacing:5px; margin-bottom:20px;">CORE ACCESS REQUIRED</div>
+    <input type="password" id="admin-pass" style="width:100%; background:#111; border:1px solid #300; color:#E02020; padding:12px; text-align:center; margin-bottom:20px;" placeholder="ENTER KEY">
+    <button onclick="verifyAccess()" style="width:100%; background:#7A0000; color:white; border:none; padding:10px; cursor:pointer;">INITIALIZE</button>
+    <div onclick="toggleLogin()" style="margin-top:20px; font-size:9px; color:#444; cursor:pointer;">ABORT</div>
   </div>
 </div>
 
-<div id="edit-panel">
-  <div class="edit-header"><span>KHAOS EDITOR SYSTEM</span><span onclick="location.reload()" style="cursor:pointer;">✕</span></div>
-  <p style="font-size:9px; color:#C89090; margin-bottom:15px; font-family:'Share Tech Mono';">MODALITÀ EDITING ATTIVA.<br>Clicca sui testi per modificarli.</p>
-  
-  <label class="edit-label">Hero Portrait (URL)</label>
-  <input type="text" class="edit-input" id="inp-portrait" placeholder="URL immagine..." oninput="updateHeroImg(this.value)">
-  
-  <button class="save-trigger" onclick="exportCode()">COPIA CODICE AGGIORNATO</button>
+<div id="hyper-panel">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
+    <span style="color:#7A0000; font-size:10px; letter-spacing:2px;">KHAOS_OS v2.0</span>
+    <span onclick="location.reload()" style="cursor:pointer; color:#444;">[CLOSE]</span>
+  </div>
+
+  <div class="hp-section">
+    <div class="hp-title">Immagini Principali</div>
+    <label class="hp-label">Portrait Hero (URL)</label>
+    <input type="text" class="hp-input" placeholder="URL Immagine..." oninput="updateAsset('.hero-portrait', 'src', this.value)">
+    <label class="hp-label">Immagine Bio (URL)</label>
+    <input type="text" class="hp-input" placeholder="URL Immagine..." oninput="updateAsset('.bio-img-main', 'src', this.value)">
+    <label class="hp-label">Sfondo Divider (URL)</label>
+    <input type="text" class="hp-input" placeholder="URL Immagine..." oninput="updateAsset('.img-divider img', 'src', this.value)">
+  </div>
+
+  <div class="hp-section">
+    <div class="hp-title">Colori Sistema</div>
+    <div class="hp-color-grid">
+      <div>
+        <label class="hp-label">Colore Sangue</label>
+        <input type="color" class="hp-input" style="height:40px; padding:2px;" oninput="updateVar('--blood', this.value)">
+      </div>
+      <div>
+        <label class="hp-label">Colore Testi</label>
+        <input type="color" class="hp-input" style="height:40px; padding:2px;" oninput="updateVar('--mist', this.value)">
+      </div>
+    </div>
+  </div>
+
+  <div class="hp-section">
+    <div class="hp-title">Salvataggio</div>
+    <p style="font-size:9px; color:#7A4040; line-height:1.5; margin-bottom:15px;">
+      MODALITÀ EDITING ATTIVA:<br>
+      Ora puoi cliccare su qualsiasi testo nel sito e scriverci direttamente.
+    </p>
+    <button class="hp-btn-save" onclick="generateFinalCode()">GENERA CODICE GITHUB</button>
+  </div>
 </div>
 
 <script>
-  function showLogin() { 
-    document.getElementById('admin-login-overlay').style.display = 'flex'; 
-    document.getElementById('pass-field').focus(); 
+  function toggleLogin() {
+    const ov = document.getElementById('admin-login-overlay');
+    ov.style.display = (ov.style.display === 'flex') ? 'none' : 'flex';
+    document.getElementById('admin-pass').focus();
   }
 
-  function checkPass() {
-    if(document.getElementById('pass-field').value === "KHAOS1") {
+  function verifyAccess() {
+    if(document.getElementById('admin-pass').value === "KHAOS1") {
       document.getElementById('admin-login-overlay').style.display = 'none';
-      document.getElementById('edit-panel').style.display = 'block';
-      document.body.classList.add('editing-active');
-      
-      // Rende editabili i testi
-      const tags = 'p, span, h1, h2, h3, td, li, div.bio-text, div.splash-text';
-      document.querySelectorAll(tags).forEach(el => {
-        if(el.children.length === 0 || el.classList.contains('bio-text')) {
-           el.contentEditable = 'true';
-        }
-      });
-    } else { 
-      alert("ACCESSO NEGATO."); 
+      document.getElementById('hyper-panel').style.display = 'block';
+      enableHyperEdit();
+    } else {
+      alert("ACCESSO NEGATO. PERSONALE NON AUTORIZZATO.");
     }
   }
 
-  function updateHeroImg(url) {
-    const img = document.querySelector('.hero-portrait');
-    if(img) img.src = url;
+  function enableHyperEdit() {
+    document.body.classList.add('editing-mode');
+    // Rende editabile OGNI elemento di testo nel sito
+    const selectors = 'p, span, h1, h2, h3, h4, td, li, blockquote, .nav-id, .splash-text, .splash-id, .tag';
+    document.querySelectorAll(selectors).forEach(el => {
+      // Evita di rendere editabili i contenitori che hanno troppi figli complessi
+      if (el.children.length <= 1) {
+        el.contentEditable = 'true';
+      }
+    });
   }
 
-  function exportCode() {
-    // Rimuove l'editing prima di copiare
+  function updateAsset(selector, attr, value) {
+    const el = document.querySelector(selector);
+    if(el) el[attr] = value;
+  }
+
+  function updateVar(name, value) {
+    document.documentElement.style.setProperty(name, value);
+  }
+
+  function generateFinalCode() {
+    // 1. Disabilita editing
+    document.body.classList.remove('editing-mode');
     document.querySelectorAll('[contenteditable="true"]').forEach(el => el.removeAttribute('contenteditable'));
-    document.body.classList.remove('editing-active');
     
+    // 2. Nasconde interfaccia admin per la copia pulita
     const opener = document.getElementById('admin-opener');
-    const panel = document.getElementById('edit-panel');
-    
-    // Nasconde temporaneamente l'interfaccia admin per il codice pulito
+    const panel = document.getElementById('hyper-panel');
     opener.style.display = 'none';
     panel.style.display = 'none';
     
-    const fullCode = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+    // 3. Cattura il codice
+    const cleanCode = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
     
-    navigator.clipboard.writeText(fullCode).then(() => {
-      alert("✓ CODICE COPIATO!\n\nIncollalo nel tuo file su GitHub.");
+    // 4. Copia negli appunti
+    navigator.clipboard.writeText(cleanCode).then(() => {
+      alert("SISTEMA AGGIORNATO!\nIl codice completo è stato copiato.\n\nOra vai su GitHub, cancella tutto il vecchio codice e incolla questo.");
       opener.style.display = 'block';
       panel.style.display = 'block';
+      enableHyperEdit(); // Riattiva per continuare se serve
     });
   }
+
+  // Fix per non bloccare lo splash screen
+  document.addEventListener('click', function(e) {
+    if(document.body.classList.contains('editing-mode')) {
+      // In modalità edit, se clicchi un link non ci va (così puoi editarlo)
+      if(e.target.tagName === 'A') e.preventDefault();
+    }
+  });
 </script>
+
 </body>
 </html>
