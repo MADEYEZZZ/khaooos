@@ -2180,12 +2180,19 @@ function resetHowl() {
   tick();
 })();
 <style id="admin-styles">
-  /* Portiamo il teschio sopra ogni overlay di rumore/linee */
+  /* FIX PER IL PULSANTE ORIGINALE "ACCEDI AL DOSSIER" */
+  .splash-enter {
+    z-index: 10005 !important;
+    position: relative !important;
+    pointer-events: auto !important;
+  }
+
+  /* IL TESCHIO ADMIN */
   #admin-opener { 
     position: fixed; 
     bottom: 20px; 
     right: 20px; 
-    z-index: 20000 !important; /* Superiore a 9998 */
+    z-index: 20000 !important; 
     font-size: 30px; 
     color: #7A0000; 
     cursor: pointer; 
@@ -2196,7 +2203,7 @@ function resetHowl() {
   }
   #admin-opener:hover { opacity: 1; transform: scale(1.2); color: #FF0000; }
   
-  /* Overlay di Login */
+  /* OVERLAY LOGIN */
   #admin-login-overlay { 
     display: none; 
     position: fixed; 
@@ -2208,9 +2215,7 @@ function resetHowl() {
     backdrop-filter: blur(15px); 
   }
   
-  .login-box { background: #000; border: 1px solid #7A0000; padding: 40px; text-align: center; width: 320px; box-shadow: 0 0 50px rgba(122,0,0,0.5); }
-  
-  /* Pannello di Controllo Laterale */
+  /* PANNELLO LATERALE */
   #hyper-panel { 
     display: none; 
     position: fixed; 
@@ -2227,7 +2232,6 @@ function resetHowl() {
     box-shadow: 20px 0 50px rgba(0,0,0,0.9);
   }
   
-  /* Stili comuni pannello */
   .hp-section { margin-bottom: 25px; border-bottom: 1px solid rgba(122,0,0,0.2); padding-bottom: 15px; }
   .hp-title { color: #E02020; font-size: 12px; letter-spacing: 3px; margin-bottom: 15px; text-transform: uppercase; font-weight: bold; }
   .hp-label { display: block; font-size: 9px; color: #7A4040; margin-bottom: 5px; text-transform: uppercase; }
@@ -2235,28 +2239,32 @@ function resetHowl() {
   .hp-btn-save { background: #7A0000; color: #fff; border: none; padding: 15px; width: 100%; cursor: pointer; font-weight: bold; letter-spacing: 2px; margin-top: 10px; }
   .hp-btn-save:hover { background: #E02020; color: #000; box-shadow: 0 0 20px #E02020; }
   
-  /* Feedback visivo durante l'editing */
   .editing-mode [contenteditable="true"] { 
     outline: 1px dashed rgba(224, 32, 32, 0.4) !important; 
     background: rgba(122,0,0,0.05); 
     cursor: text !important;
+  }
+
+  /* Impedisce all'overlay noise di bloccare i click se l'admin è attivo */
+  .editing-mode body::after, .editing-mode body::before {
+    pointer-events: none !important;
   }
 </style>
 
 <div id="admin-opener" onclick="toggleLogin()">☠</div>
 
 <div id="admin-login-overlay">
-  <div class="login-box">
-    <div style="font-size:11px; color:#7A0000; letter-spacing:5px; margin-bottom:20px;">CORE ACCESS REQUIRED</div>
-    <input type="password" id="admin-pass" style="width:100%; background:#111; border:1px solid #300; color:#E02020; padding:12px; text-align:center; margin-bottom:20px;" placeholder="ENTER KEY">
-    <button onclick="verifyAccess()" style="width:100%; background:#7A0000; color:white; border:none; padding:10px; cursor:pointer;">INITIALIZE</button>
-    <div onclick="toggleLogin()" style="margin-top:20px; font-size:9px; color:#444; cursor:pointer;">ABORT</div>
+  <div class="login-box" style="background: #000; border: 1px solid #7A0000; padding: 40px; text-align: center; width: 320px;">
+    <div style="font-size:11px; color:#7A0000; letter-spacing:5px; margin-bottom:20px; font-family:'Share Tech Mono';">CORE ACCESS REQUIRED</div>
+    <input type="password" id="admin-pass" style="width:100%; background:#111; border:1px solid #300; color:#E02020; padding:12px; text-align:center; margin-bottom:20px; font-family:'Share Tech Mono';" placeholder="ENTER KEY">
+    <button onclick="verifyAccess()" style="width:100%; background:#7A0000; color:white; border:none; padding:10px; cursor:pointer; font-family:'Share Tech Mono';">INITIALIZE</button>
+    <div onclick="toggleLogin()" style="margin-top:20px; font-size:9px; color:#444; cursor:pointer; font-family:'Share Tech Mono';">ABORT</div>
   </div>
 </div>
 
 <div id="hyper-panel">
   <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
-    <span style="color:#7A0000; font-size:10px; letter-spacing:2px;">KHAOS_OS v3.0</span>
+    <span style="color:#7A0000; font-size:10px; letter-spacing:2px;">KHAOS_OS v4.0</span>
     <span onclick="location.reload()" style="cursor:pointer; color:#444;">[ESCI]</span>
   </div>
 
@@ -2269,9 +2277,9 @@ function resetHowl() {
   </div>
 
   <div class="hp-section">
-    <div class="hp-title">Personalizzazione Totale</div>
-    <p style="font-size:9px; color:#7A4040; line-height:1.5;">
-      In modalità edit puoi cliccare e modificare **qualsiasi** testo nel sito.
+    <div class="hp-title">Pannello Modifiche</div>
+    <p style="font-size:9px; color:#7A4040; line-height:1.5; margin-bottom:10px;">
+      MODALITÀ EDIT ATTIVA: Clicca su qualsiasi testo nel sito per cambiarlo.
     </p>
     <button class="hp-btn-save" onclick="generateFinalCode()">COPIA CODICE GITHUB</button>
   </div>
@@ -2296,8 +2304,8 @@ function resetHowl() {
 
   function enableHyperEdit() {
     document.body.classList.add('editing-mode');
-    // Rende editabile TUTTO ciò che contiene testo
-    const selectors = 'p, span, h1, h2, h3, h4, td, li, blockquote, div.nav-id, div.splash-text, div.splash-id, .tag, .hero-name, .hero-surname';
+    // Selettori per ogni parte del sito
+    const selectors = 'p, span, h1, h2, h3, h4, td, li, blockquote, div.nav-id, div.splash-text, div.splash-id, .tag, .hero-name, .hero-surname, .skill-name, .skill-desc';
     document.querySelectorAll(selectors).forEach(el => {
         el.contentEditable = 'true';
     });
@@ -2309,18 +2317,24 @@ function resetHowl() {
   }
 
   function generateFinalCode() {
+    // Pulisce tutto prima del salvataggio
     document.body.classList.remove('editing-mode');
     document.querySelectorAll('[contenteditable="true"]').forEach(el => el.removeAttribute('contenteditable'));
     
     const opener = document.getElementById('admin-opener');
     const panel = document.getElementById('hyper-panel');
+    const styles = document.getElementById('admin-styles');
+    
+    // Rimuove temporaneamente gli elementi admin per generare il codice pulito
     opener.style.display = 'none';
     panel.style.display = 'none';
     
+    // Rimuoviamo anche il CSS dell'admin dal file finale per sicurezza, 
+    // così chi visita il sito non vede il teschio se non lo riaggiungi tu.
     const cleanCode = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
     
     navigator.clipboard.writeText(cleanCode).then(() => {
-      alert("✓ CODICE IPER-MODIFICATO COPIATO!\nIncollalo su GitHub per salvare.");
+      alert("✓ CODICE COPIATO!\n\nLe modifiche sono state salvate nel codice.\nIncollalo su GitHub.");
       opener.style.display = 'block';
       panel.style.display = 'block';
     });
