@@ -2179,165 +2179,144 @@ function resetHowl() {
   }
   tick();
 })();
-  
-<style id="admin-styles">
-  /* FIX PER IL PULSANTE ORIGINALE "ACCEDI AL DOSSIER" */
-  .splash-enter {
-    z-index: 10005 !important;
+ <style id="admin-styles">
+  /* FORZATURA TOTALE PER IL TASTO ORIGINALE DEL DOSSIER */
+  .splash-enter, #splash button, [onclick*="splash"] {
     position: relative !important;
+    z-index: 10005 !important;
     pointer-events: auto !important;
+    cursor: crosshair !important;
   }
 
-  /* IL TESCHIO ADMIN */
+  /* IL TESCHIO ADMIN - DEVE ESSERE SOPRA IL NOISE */
   #admin-opener { 
-    position: fixed; 
-    bottom: 20px; 
-    right: 20px; 
-    z-index: 20000 !important; 
-    font-size: 30px; 
-    color: #7A0000; 
-    cursor: pointer; 
-    opacity: 0.5; 
-    transition: 0.3s; 
-    user-select: none;
+    position: fixed !important; 
+    bottom: 20px !important; 
+    right: 20px !important; 
+    z-index: 10010 !important; 
+    font-size: 35px !important; 
+    color: #7A0000 !important; 
+    cursor: pointer !important; 
+    opacity: 0.6 !important;
     pointer-events: auto !important;
+    user-select: none;
+    background: none;
+    border: none;
   }
-  #admin-opener:hover { opacity: 1; transform: scale(1.2); color: #FF0000; }
-  
-  /* OVERLAY LOGIN */
+  #admin-opener:hover { opacity: 1; color: #FF0000; transform: scale(1.1); }
+
+  /* OVERLAY DI LOGIN */
   #admin-login-overlay { 
     display: none; 
     position: fixed; 
     inset: 0; 
     background: rgba(0,0,0,0.98); 
-    z-index: 20001 !important; 
+    z-index: 10011 !important; 
     align-items: center; 
     justify-content: center; 
-    backdrop-filter: blur(15px); 
+    backdrop-filter: blur(20px); 
   }
-  
-  /* PANNELLO LATERALE */
+
+  /* IL PANNELLO IPER-MODIFICANTE */
   #hyper-panel { 
     display: none; 
     position: fixed; 
     left: 0; 
     top: 0; 
-    width: 350px; 
+    width: 360px; 
     height: 100vh; 
     background: #050001; 
-    border-right: 1px solid #7A0000; 
-    z-index: 20002 !important; 
-    padding: 25px; 
+    border-right: 2px solid #7A0000; 
+    z-index: 10012 !important; 
+    padding: 30px; 
     overflow-y: auto; 
-    font-family: 'Share Tech Mono', monospace; 
-    box-shadow: 20px 0 50px rgba(0,0,0,0.9);
-  }
-  
-  .hp-section { margin-bottom: 25px; border-bottom: 1px solid rgba(122,0,0,0.2); padding-bottom: 15px; }
-  .hp-title { color: #E02020; font-size: 12px; letter-spacing: 3px; margin-bottom: 15px; text-transform: uppercase; font-weight: bold; }
-  .hp-label { display: block; font-size: 9px; color: #7A4040; margin-bottom: 5px; text-transform: uppercase; }
-  .hp-input { width: 100%; background: #111; border: 1px solid #330000; color: #F5D0D0; padding: 8px; font-size: 11px; margin-bottom: 10px; outline: none; }
-  .hp-btn-save { background: #7A0000; color: #fff; border: none; padding: 15px; width: 100%; cursor: pointer; font-weight: bold; letter-spacing: 2px; margin-top: 10px; }
-  .hp-btn-save:hover { background: #E02020; color: #000; box-shadow: 0 0 20px #E02020; }
-  
-  .editing-mode [contenteditable="true"] { 
-    outline: 1px dashed rgba(224, 32, 32, 0.4) !important; 
-    background: rgba(122,0,0,0.05); 
-    cursor: text !important;
+    font-family: 'Share Tech Mono', monospace;
+    box-shadow: 20px 0 50px #000;
   }
 
-  /* Impedisce all'overlay noise di bloccare i click se l'admin è attivo */
+  /* INPUT E BOTTONI PANNELLO */
+  .hp-input { width: 100%; background: #111; border: 1px solid #400; color: #E02020; padding: 10px; margin-bottom: 15px; font-family: 'Share Tech Mono'; }
+  .hp-btn { background: #7A0000; color: #fff; border: none; padding: 15px; width: 100%; cursor: pointer; font-weight: bold; margin-top: 10px; text-transform: uppercase; }
+  .hp-btn:hover { background: #E02020; color: #000; }
+
+  /* MODALITÀ EDITING - DISABILITA IL NOISE CHE BLOCCA I CLICK */
   .editing-mode body::after, .editing-mode body::before {
     pointer-events: none !important;
+    z-index: -1 !important;
+  }
+  .editing-mode [contenteditable="true"] {
+    outline: 1px dashed #E02020 !important;
+    cursor: text !important;
   }
 </style>
 
-<div id="admin-opener" onclick="toggleLogin()">☠</div>
+<button id="admin-opener" onclick="toggleKhaosLogin()">☠</button>
 
 <div id="admin-login-overlay">
-  <div class="login-box" style="background: #000; border: 1px solid #7A0000; padding: 40px; text-align: center; width: 320px;">
-    <div style="font-size:11px; color:#7A0000; letter-spacing:5px; margin-bottom:20px; font-family:'Share Tech Mono';">CORE ACCESS REQUIRED</div>
-    <input type="password" id="admin-pass" style="width:100%; background:#111; border:1px solid #300; color:#E02020; padding:12px; text-align:center; margin-bottom:20px; font-family:'Share Tech Mono';" placeholder="ENTER KEY">
-    <button onclick="verifyAccess()" style="width:100%; background:#7A0000; color:white; border:none; padding:10px; cursor:pointer; font-family:'Share Tech Mono';">INITIALIZE</button>
-    <div onclick="toggleLogin()" style="margin-top:20px; font-size:9px; color:#444; cursor:pointer; font-family:'Share Tech Mono';">ABORT</div>
+  <div style="background:#000; border:1px solid #700; padding:40px; width:320px; text-align:center;">
+    <div style="color:#700; font-family:'Cinzel'; letter-spacing:3px; margin-bottom:20px;">SYSTEM OVERRIDE</div>
+    <input type="password" id="kp-pass" placeholder="PASSWORD" style="width:100%; padding:10px; background:#111; border:1px solid #400; color:#fff; text-align:center;">
+    <button onclick="checkKhaosPass()" style="width:100%; margin-top:20px; padding:10px; background:#700; color:#fff; border:none; cursor:pointer;">ACCESS</button>
+    <div onclick="toggleKhaosLogin()" style="color:#444; margin-top:15px; cursor:pointer; font-size:10px;">ANNULLA</div>
   </div>
 </div>
 
 <div id="hyper-panel">
-  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
-    <span style="color:#7A0000; font-size:10px; letter-spacing:2px;">KHAOS_OS v4.0</span>
-    <span onclick="location.reload()" style="cursor:pointer; color:#444;">[ESCI]</span>
-  </div>
+  <div style="color:#E02020; font-family:'Cinzel'; font-size:14px; margin-bottom:30px; border-bottom:1px solid #400;">KHAOS HYPER-EDITOR</div>
+  
+  <label style="color:#700; font-size:10px;">LINK IMMAGINE PORTRAIT</label>
+  <input type="text" class="hp-input" id="edit-img-port" oninput="document.querySelector('.hero-portrait').src=this.value">
+  
+  <label style="color:#700; font-size:10px;">LINK IMMAGINE BIO</label>
+  <input type="text" class="hp-input" id="edit-img-bio" oninput="document.querySelector('.bio-img-main').src=this.value">
 
-  <div class="hp-section">
-    <div class="hp-title">Asset Principali</div>
-    <label class="hp-label">Portrait Hero (URL)</label>
-    <input type="text" class="hp-input" placeholder="URL..." oninput="updateAsset('.hero-portrait', 'src', this.value)">
-    <label class="hp-label">Immagine Bio (URL)</label>
-    <input type="text" class="hp-input" placeholder="URL..." oninput="updateAsset('.bio-img-main', 'src', this.value)">
-  </div>
-
-  <div class="hp-section">
-    <div class="hp-title">Pannello Modifiche</div>
-    <p style="font-size:9px; color:#7A4040; line-height:1.5; margin-bottom:10px;">
-      MODALITÀ EDIT ATTIVA: Clicca su qualsiasi testo nel sito per cambiarlo.
-    </p>
-    <button class="hp-btn-save" onclick="generateFinalCode()">COPIA CODICE GITHUB</button>
-  </div>
+  <div style="color:#555; font-size:9px; margin:20px 0;">MODALITÀ EDIT ATTIVA: Clicca su qualsiasi testo per modificarlo.</div>
+  
+  <button class="hp-btn" onclick="copyKhaosCode()">COPIA CODICE GITHUB</button>
+  <button class="hp-btn" style="background:#222; margin-top:5px;" onclick="location.reload()">ESCI SENZA SALVARE</button>
 </div>
 
 <script>
-  function toggleLogin() {
-    const ov = document.getElementById('admin-login-overlay');
-    ov.style.display = (ov.style.display === 'flex') ? 'none' : 'flex';
-    document.getElementById('admin-pass').focus();
+  function toggleKhaosLogin() {
+    const el = document.getElementById('admin-login-overlay');
+    el.style.display = (el.style.display === 'flex') ? 'none' : 'flex';
+    document.getElementById('kp-pass').focus();
   }
 
-  function verifyAccess() {
-    if(document.getElementById('admin-pass').value === "KHAOS1") {
+  function checkKhaosPass() {
+    if(document.getElementById('kp-pass').value === "KHAOS1") {
       document.getElementById('admin-login-overlay').style.display = 'none';
       document.getElementById('hyper-panel').style.display = 'block';
-      enableHyperEdit();
-    } else {
-      alert("ACCESSO NEGATO.");
-    }
+      startHyperEdit();
+    } else { alert("ACCESSO NEGATO"); }
   }
 
-  function enableHyperEdit() {
+  function startHyperEdit() {
     document.body.classList.add('editing-mode');
-    // Selettori per ogni parte del sito
-    const selectors = 'p, span, h1, h2, h3, h4, td, li, blockquote, div.nav-id, div.splash-text, div.splash-id, .tag, .hero-name, .hero-surname, .skill-name, .skill-desc';
-    document.querySelectorAll(selectors).forEach(el => {
-        el.contentEditable = 'true';
+    // Rende editabile TUTTO il testo
+    const tags = 'p, span, h1, h2, h3, h4, td, li, .tag, .nav-id, .splash-text, .splash-id';
+    document.querySelectorAll(tags).forEach(el => {
+      el.contentEditable = 'true';
     });
   }
 
-  function updateAsset(selector, attr, value) {
-    const el = document.querySelector(selector);
-    if(el) el[attr] = value;
-  }
-
-  function generateFinalCode() {
-    // Pulisce tutto prima del salvataggio
+  function copyKhaosCode() {
+    // Pulisce il codice prima di copiare
     document.body.classList.remove('editing-mode');
     document.querySelectorAll('[contenteditable="true"]').forEach(el => el.removeAttribute('contenteditable'));
     
     const opener = document.getElementById('admin-opener');
     const panel = document.getElementById('hyper-panel');
-    const styles = document.getElementById('admin-styles');
-    
-    // Rimuove temporaneamente gli elementi admin per generare il codice pulito
     opener.style.display = 'none';
     panel.style.display = 'none';
-    
-    // Rimuoviamo anche il CSS dell'admin dal file finale per sicurezza, 
-    // così chi visita il sito non vede il teschio se non lo riaggiungi tu.
-    const cleanCode = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
-    
-    navigator.clipboard.writeText(cleanCode).then(() => {
-      alert("✓ CODICE COPIATO!\n\nLe modifiche sono state salvate nel codice.\nIncollalo su GitHub.");
+
+    const fullCode = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+
+    navigator.clipboard.writeText(fullCode).then(() => {
+      alert("✓ CODICE COPIATO!\nIncollalo su GitHub.");
       opener.style.display = 'block';
       panel.style.display = 'block';
+      startHyperEdit();
     });
   }
 </script>
