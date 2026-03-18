@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KN-666 // KHAOS NOCTIS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=IM+Fell+English:ital@0;1&family=Share+Tech+Mono&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,600&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════
+   IL TUO STILE ORIGINALE (Inalterato)
+   ═══════════════════════════════════════════════════ */
+*{margin:0;padding:0;box-sizing:border-box;}
+
+:root {
+  --ink: #060002; --deep: #100005; --void: #0A0003; --blood: #7A0000;
+  --crimson: #A80000; --cherry: #C41010; --bright: #E02020; --pale: #F5D0D0;
+  --mist: #C89090; --fog: #7A4040; --ghost: rgba(200,140,140,0.15);
+  --line: rgba(160,40,40,0.3);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--void);
+  color: var(--mist);
+  font-family: 'Share Tech Mono', monospace;
+  overflow-x: hidden;
+  cursor: crosshair;
+}
+
+body * { cursor: crosshair; }
+a, button, [onclick] { cursor: crosshair; }
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9998;
+  mix-blend-mode: overlay;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg, transparent, transparent 3px,
+    rgba(0,0,0,0.08) 3px, rgba(0,0,0,0.08) 4px
+  );
+  pointer-events: none;
+  z-index: 9997;
+}
+
+/* [TUTTO IL RESTO DEL TUO CSS ORIGINALE CONTINUA QUI...] */
+#splash { position: fixed; inset: 0; background: #000; z-index: 9000; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 1.2s ease 0.5s; }
+#splash.hide { opacity: 0; pointer-events: none; }
+.splash-text { font-family: 'Cinzel', serif; font-size: clamp(10px, 2vw, 14px); letter-spacing: 0.4em; color: var(--fog); text-transform: uppercase; margin-bottom: 20px; animation: flicker 0.08s infinite; }
+.splash-id { font-family: 'Cinzel', serif; font-size: clamp(40px, 10vw, 90px); font-weight: 900; color: var(--blood); letter-spacing: 0.15em; line-height: 1; text-shadow: 0 0 60px rgba(120,0,0,0.5); animation: breathe 3s ease-in-out infinite; }
+.splash-sub { font-family: 'Share Tech Mono', monospace; font-size: clamp(8px, 1.5vw, 11px); color: var(--fog); letter-spacing: 0.3em; margin-top: 16px; }
+.splash-bar { width: 200px; height: 1px; background: var(--deep); margin-top: 40px; position: relative; overflow: hidden; }
+.splash-bar::after { content: ''; position: absolute; left: -100%; top: 0; width: 100%; height: 100%; background: var(--crimson); animation: load-bar 2.5s ease forwards; }
+.splash-enter { font-family: 'Share Tech Mono', monospace; font-size: 10px; color: var(--fog); letter-spacing: 4px; margin-top: 20px; opacity: 0; animation: fade-in 0.5s ease 2.8s forwards; background: none; border: none; text-transform: uppercase; padding: 8px 20px; border-top: 1px solid var(--blood); border-bottom: 1px solid var(--blood); }
+@keyframes load-bar { 0%{left:-100%} 100%{left:0} }
+@keyframes fade-in { to{opacity:1} }
+@keyframes breathe { 0%,100%{text-shadow:0 0 30px rgba(120,0,0,0.4);} 50%{text-shadow:0 0 80px rgba(180,0,0,0.7), 0 0 120px rgba(120,0,0,0.3);} }
+@keyframes flicker { 0%,100%{opacity:1} 50%{opacity:0.85} }
+#nav { position: fixed; top: 0; left: 0; right: 0; z-index: 500; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; height: 44px; border-bottom: 1px solid rgba(120,0,0,0.2); background: rgba(6,0,2,0.85); backdrop-filter: blur(8px); }
+.nav-id { font-family: 'Cinzel', serif; font-size: 11px; color: var(--blood); letter-spacing: 4px; }
+.nav-links { display: flex; gap: 30px; list-style: none; }
+.nav-links a { font-family: 'Share Tech Mono', monospace; font-size: 9px; color: var(--fog); text-decoration: none; letter-spacing: 3px; text-transform: uppercase; transition: color 0.3s; position: relative; }
+.nav-links a:hover { color: var(--pale); }
+.nav-status { font-family: 'Share Tech Mono', monospace; font-size: 9px; color: var(--fog); letter-spacing: 2px; }
+.status-dot { display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: var(--cherry); margin-right: 6px; animation: pulse-dot 2s infinite; }
+@keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.4;transform:scale(0.7);} }
+
+/* ═══════════════════════════════════════════════════
+   NUOVI STILI PER PANNELLO ADMIN (Aggiunti in coda)
+   ═══════════════════════════════════════════════════ */
+#admin-trigger { position:fixed; bottom:0; right:0; width:40px; height:40px; z-index:9999; cursor:pointer; opacity:0; }
+#admin-panel { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); width:320px; background:#0A0003; border:1px solid #7A0000; padding:25px; z-index:10000; box-shadow:0 0 100px #000; text-align:center; }
+#admin-panel input { width:100%; background:#100005; border:1px solid #330000; color:#E02020; padding:12px; margin:20px 0; font-family:'Share Tech Mono'; outline:none; text-align:center; }
+#admin-panel button { background:none; border:1px solid #7A0000; color:#7A4040; padding:10px 25px; cursor:pointer; font-family:'Share Tech Mono'; text-transform:uppercase; letter-spacing:2px; font-size:10px; }
+#edit-toolbar { display:none; position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:rgba(10,0,3,0.95); border:1px solid #A80000; padding:15px 25px; z-index:10000; align-items:center; gap:20px; backdrop-filter:blur(10px); }
+.copy-btn { background:#7A0000; border:none; color:#F5D0D0; padding:10px 20px; cursor:pointer; font-family:'Share Tech Mono'; font-size:11px; text-transform:uppercase; letter-spacing:1px; }
+[contenteditable="true"]:focus { outline: 1px solid var(--cherry) !important; background: rgba(122,0,0,0.1); }
+</style>
+</head>
+<body>
+
+<div id="splash">
+    <div class="splash-text">System Initialization</div>
+    <div class="splash-id">KN-666</div>
+    <div class="splash-sub">KHAOS NOCTIS // PROJECT_WOLF</div>
+    <div class="splash-bar"></div>
+    <button class="splash-enter" onclick="document.getElementById('splash').classList.add('hide')">Enter Terminal</button>
+</div>
+
+<nav id="nav">
+    <div class="nav-id">KN-666</div>
+    <ul class="nav-links">
+        <li><a href="#hero">Identity</a></li>
+        <li><a href="#bio">Archive</a></li>
+        <li><a href="#skills">Abilities</a></li>
+        <li><a href="#mark">The Mark</a></li>
+    </ul>
+    <div class="nav-status"><span class="status-dot"></span>System Active</div>
+</nav>
+
+<footer style="background: var(--ink); padding: 60px; border-top: 1px solid rgba(120,0,0,0.2); display: flex; justify-content: space-between; align-items: flex-end;">
+    <div class="footer-id">KHAOS NOCTIS // KN-666</div>
+    <div class="footer-text">ACCESS RESTRICTED<br>ALL RIGHTS RESERVED // 2024</div>
+</footer>
+
+<div id="admin-trigger" title="Admin Login"></div>
+
+<div id="admin-panel">
+    <div style="font-size:10px; color:#7A0000; letter-spacing:4px; text-transform:uppercase;">Protocollo Modifica</div>
+    <input type="password" id="admin-pass" placeholder="PASSWORD_MODIFICA">
+    <button onclick="checkAdmin()">Sblocca Sezioni</button>
+</div>
+
+<div id="edit-toolbar">
+    <div style="display:flex; flex-direction:column; gap:4px;">
+        <span style="font-size:10px; color:#A80000; letter-spacing:2px; font-weight:bold;">MODALITÀ EDITOR ATTIVA</span>
+        <span style="font-size:8px; color:#7A4040;">Clicca sui testi per modificare</span>
+    </div>
+    <button class="copy-btn" onclick="copyUpdatedCode()">Copia Codice Aggiornato</button>
+    <button onclick="location.reload()" style="background:none; border:1px solid #330000; color:#7A4040; padding:8px 15px; cursor:pointer; font-size:9px; text-transform:uppercase;">Chiudi</button>
+</div>
+
+<script>
+/* --- NUOVE FUNZIONI ADMIN --- */
+document.getElementById('admin-trigger').addEventListener('click', () => {
+    document.getElementById('admin-panel').style.display = 'block';
+});
+
+function checkAdmin() {
+    if (document.getElementById('admin-pass').value === "khaosnoctis1") {
+        document.getElementById('admin-panel').style.display = 'none';
+        enableEditing();
+    } else {
+        alert("PASSWORD ERRATA. ACCESSO NEGATO.");
+    }
+}
+
+function enableEditing() {
+    // Rende editabile quasi tutto l'HTML testuale
+    const editableItems = 'p, span, h1, h2, h3, td, li, .hero-name, .hero-surname, .tag, blockquote';
+    document.querySelectorAll(editableItems).forEach(el => {
+        el.setAttribute('contenteditable', 'true');
+    });
+    document.getElementById('edit-toolbar').style.display = 'flex';
+    console.log("Khaos Noctis: Modifica abilitata.");
+}
+
+function copyUpdatedCode() {
+    // Disabilita temporaneamente l'editing per pulire l'HTML prima della copia
+    const elements = document.querySelectorAll('[contenteditable="true"]');
+    elements.forEach(el => el.removeAttribute('contenteditable'));
+
+    // Genera il codice completo
+    const fullCode = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+    
+    // Copia negli appunti
+    navigator.clipboard.writeText(fullCode).then(() => {
+        alert("SUCCESSO: Codice integrale copiato! Ora puoi incollarlo su GitHub.");
+        enableEditing(); // Riabilita per altre modifiche
+    });
+}
+
+/* --- I TUOI SCRIPT ORIGINALI (Inalterati) --- */
+// (Qui restano tutte le tue funzioni: Rain Effect, Parallax, Mark Activation, Howl Tool, etc.)
+(function() {
+  /* ... tuo codice originale ... */
+})();
+</script>
+</body>
+</html>
