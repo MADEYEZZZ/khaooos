@@ -2180,5 +2180,56 @@ function resetHowl() {
   tick();
 })();
 </script>
+  <div id="admin-panel" style="display:none; position:fixed; top:60px; right:20px; width:300px; background:rgba(10,0,3,0.95); border:1px solid var(--blood); z-index:9999; padding:20px; backdrop-filter:blur(10px); box-shadow:0 0 30px rgba(0,0,0,0.8);">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:1px solid var(--line); padding-bottom:10px;">
+    <span style="font-family:'Cinzel',serif; font-size:10px; color:var(--crimson); letter-spacing:2px;">SISTEMA // CONTROLLO</span>
+    <button onclick="document.getElementById('admin-panel').style.display='none'" style="background:none; border:none; color:var(--fog); cursor:pointer; font-size:12px;">✕</button>
+  </div>
+  
+  <div style="display:flex; flex-direction:column; gap:15px;">
+    <button onclick="toggleRedacted()" style="background:none; border:1px solid var(--line); color:var(--pale); padding:10px; font-family:'Share Tech Mono',monospace; font-size:9px; cursor:pointer; text-transform:uppercase; transition:0.3s;" onmouseover="this.style.borderColor='var(--cherry)'" onmouseout="this.style.borderColor='var(--line)'">
+      Rivelazione Dati Classificati
+    </button>
+    
+    <button onclick="activateMark()" style="background:none; border:1px solid var(--line); color:var(--pale); padding:10px; font-family:'Share Tech Mono',monospace; font-size:9px; cursor:pointer; text-transform:uppercase; transition:0.3s;" onmouseover="this.style.borderColor='var(--cherry)'" onmouseout="this.style.borderColor='var(--line)'">
+      Forza Attivazione Marchio
+    </button>
+
+    <div style="margin-top:10px;">
+      <label style="font-family:'Share Tech Mono',monospace; font-size:8px; color:var(--blood); display:block; margin-bottom:5px;">OVERRIDE STATUS LORE</label>
+      <input type="text" id="status-override" placeholder="Inserisci nuovo stato..." style="width:100%; background:var(--ink); border:1px solid var(--line); color:var(--mist); padding:8px; font-family:'Share Tech Mono',monospace; font-size:9px; outline:none;">
+      <button onclick="updateStatus()" style="width:100%; margin-top:5px; background:var(--blood); border:none; color:white; padding:5px; font-family:'Share Tech Mono',monospace; font-size:8px; cursor:pointer;">APPLICA</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// Funzione per mostrare il pannello con combinazione tasti (Alt + Shift + A)
+document.addEventListener('keydown', function(e) {
+  if (e.altKey && e.shiftKey && e.code === 'KeyA') {
+    var p = document.getElementById('admin-panel');
+    p.style.display = p.style.display === 'none' ? 'block' : 'none';
+  }
+});
+
+function toggleRedacted() {
+  document.querySelectorAll('.redacted-cell, .classified').forEach(el => el.click());
+}
+
+function activateMark() {
+  const mark = document.querySelector('.mark-symbol-container');
+  if(mark) mark.classList.toggle('activated');
+  const btn = document.querySelector('.cd-btn');
+  if(btn) btn.click();
+}
+
+function updateStatus() {
+  const val = document.getElementById('status-override').value;
+  const statusEl = document.querySelector('.nav-status');
+  if(statusEl && val) {
+    statusEl.innerHTML = '<span class="status-dot"></span>' + val.toUpperCase();
+  }
+}
+</script>
 </body>
 </html>
